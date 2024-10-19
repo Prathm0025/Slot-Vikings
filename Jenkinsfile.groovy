@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     dir("${PROJECT_PATH}") { 
-                         git url: REPO_URL, branch: 'develop'
+                         git url: REPO_URL, branch: 'develop', credentialsId: 'GITHUB_Ekansh'
                     }
                 }
             }

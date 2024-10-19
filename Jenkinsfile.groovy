@@ -14,7 +14,7 @@ pipeline {
     
     environment {
         PROJECT_PATH = "C:\\${PROJECT_NAME}" 
-        Token = credentials('GITHUB_Prathm0025') 
+        Token = credentials('Github_Prathm0025') 
         S3_BUCKET = "vikingsbucket" // Define your bucket name here
     }
 
@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     dir("${PROJECT_PATH}") { 
-                         git url: REPO_URL, branch: 'develop', credentialsId: 'GITHUB_Prathm0025'
+                         git url: REPO_URL, branch: 'develop', credentialsId: 'Github_Prathm0025'
                     }
                 }
             }

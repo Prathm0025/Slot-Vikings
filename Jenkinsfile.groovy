@@ -9,7 +9,7 @@ pipeline {
     }
 
     options {
-        timeout(time: 20, unit: 'MINUTES') // Set a timeout for the entire build
+        timeout(time: 60, unit: 'MINUTES') // Set a timeout for the entire build
     }
     
     environment {

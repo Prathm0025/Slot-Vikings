@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Runtime.InteropServices;
 using System;
-//test
+
 public class JSHandler : MonoBehaviour
 {
     [DllImport("__Internal")]

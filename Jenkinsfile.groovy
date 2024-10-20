@@ -11,7 +11,7 @@ pipeline {
     }
 
     environment {
-        PROJECT_PATH = "C:\\${PROJECT_NAME}"
+        PROJECT_PATH = "D:\\${PROJECT_NAME}"
         S3_BUCKET = "vikingsbucket" 
     }
 
@@ -23,7 +23,7 @@ pipeline {
                         retry(3) { // Retry up to 3 times
                             try {
                                 bat 'git config --global http.postBuffer 3221225472' 
-                                git branch: 'develop', url: 'https://github.com/Prathm0025/Slot-Vikings.git', depth: 1 
+                                git branch: 'develop', url: 'REPO_URL', depth: 1 
                             } catch (Exception e) {
                                 error "Checkout failed: ${e.message}"
                             }
@@ -50,15 +50,9 @@ pipeline {
                 script {
                     dir("${PROJECT_PATH}") {
                         bat '''
-                            git config user.email "prathamesh@underpinservices.com"
-                            git config user.name "Prathm0025"
-                            git checkout -b main || git checkout main
-                            rmdir /S /Q Builds
-                            git checkout develop -- Builds
-
-                            git add -f Builds
-                            git commit -m "Add build" || echo "No changes to commit"
-                            git push
+                            git add Builds
+                            git commit -m "build updated"
+                            git push origin develop
                         '''
                     }
                 }

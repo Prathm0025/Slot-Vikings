@@ -4,26 +4,26 @@ def UNITY_INSTALLATION = "C:\\Program Files\\Unity\\Hub\\Editor\\${UNITY_VERSION
 def REPO_URL = "git@github.com:Prathm0025/Slot-Vikings.git"
 
 pipeline {
-    agent any  
+    agent any
 
     options {
-        timeout(time: 60, unit: 'MINUTES') 
+        timeout(time: 60, unit: 'MINUTES')
     }
-    
+
     environment {
-        PROJECT_PATH = "C:\\${PROJECT_NAME}" 
-        S3_BUCKET = "vikingsbucket" // Define your bucket name here
+        PROJECT_PATH = "C:\\${PROJECT_NAME}"
+        S3_BUCKET = "vikingsbucket" 
     }
 
     stages {
         stage('Checkout') {
             steps {
                 script {
-                    dir("${PROJECT_PATH}") { 
+                    dir("${PROJECT_PATH}") {
                         retry(3) { // Retry up to 3 times
                             try {
-                                bat 'git config --global http.postBuffer 3221225472' // Set buffer to 500MB
-                                git url: https://github.com/DingDingHouse/Slot-Vikings.git, branch: 'develop', depth: 1 
+                                bat 'git config --global http.postBuffer 3221225472' 
+                                git branch: 'develop', url: 'https://github.com/Prathm0025/Slot-Vikings.git', depth: 1 
                             } catch (Exception e) {
                                 error "Checkout failed: ${e.message}"
                             }
@@ -50,16 +50,14 @@ pipeline {
                 script {
                     dir("${PROJECT_PATH}") {
                         bat '''
-                            git init 
                             git config user.email "prathamesh@underpinservices.com"
                             git config user.name "Prathm0025"
-                            git checkout -B main
-                            rmdir /S /Q Builds 
-                            git checkout develop -- Builds 
-                            git remote set-url origin https://github.com/Prathm0025/Slot-Vikings-dev.git
-                            git add -f Builds 
+                            git checkout -b main || git checkout main
+                            rmdir /S /Q Builds
+                            git checkout develop -- Builds
+                            git add -f Builds
                             git commit -m "Add build" || echo "No changes to commit"
-                            git push --set-upstream origin main || git push
+                            git push
                         '''
                     }
                 }
@@ -71,8 +69,13 @@ pipeline {
                 script {
                     dir("${PROJECT_PATH}") {
                         bat '''
+                        REM Copy all files, including .html files, to S3
                         aws s3 cp "Builds/WebGL/" s3://%S3_BUCKET%/ --recursive --acl public-read
+
+                        REM Move index.html to the root for S3 hosting
                         aws s3 cp "Builds/WebGL/index.html" s3://%S3_BUCKET%/index.html --acl public-read
+
+                        REM Optional: Set S3 bucket for static web hosting
                         aws s3 website s3://%S3_BUCKET%/ --index-document index.html --error-document index.html
                         '''
                     }

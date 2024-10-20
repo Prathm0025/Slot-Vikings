@@ -50,12 +50,13 @@ pipeline {
                 script {
                     dir("${PROJECT_PATH}") {
                         bat '''
+                            git init 
                             git config user.email "prathamesh@underpinservices.com"
                             git config user.name "Prathm0025"
-                            
                             git checkout -B main
                             rmdir /S /Q Builds 
                             git checkout develop -- Builds 
+                            git remote set-url origin https://github.com/Prathm0025/Slot-Vikings-dev.git
                             git add -f Builds 
                             git commit -m "Add build" || echo "No changes to commit"
                             git push --set-upstream origin main || git push

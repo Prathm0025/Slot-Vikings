@@ -22,8 +22,11 @@ pipeline {
                     dir("${PROJECT_PATH}") {
                         retry(3) { // Retry up to 3 times
                             try {
-                                bat 'git config --global http.postBuffer 3221225472' 
-                                git branch: 'develop', url: 'git@github.com:Prathm0025/Slot-Vikings.git', depth: 1 
+                                bat '''
+                                git config --global http.postBuffer 3221225472
+                                git clone git@github.com:Prathm0025/Slot-Vikings.git || git pull origin develop
+                                '''
+                                
                             } catch (Exception e) {
                                 error "Checkout failed: ${e.message}"
                             }

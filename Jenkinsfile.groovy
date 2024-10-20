@@ -20,7 +20,14 @@ pipeline {
             steps {
                 script {
                     dir("${PROJECT_PATH}") { 
-                        git url: REPO_URL, branch: 'develop'
+                        retry(3) { // Retry up to 3 times
+                            try {
+                                bat 'git config --global http.postBuffer 524288000' // Set buffer to 500MB
+                                git url: REPO_URL, branch: 'develop', depth: 1 // Use shallow clone
+                            } catch (Exception e) {
+                                error "Checkout failed: ${e.message}"
+                            }
+                        }
                     }
                 }
             }

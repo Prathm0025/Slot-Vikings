@@ -23,7 +23,7 @@ pipeline {
                         retry(3) { // Retry up to 3 times
                             try {
                                 bat 'git config --global http.postBuffer 3221225472' 
-                                git branch: 'develop', url: 'REPO_URL', depth: 1 
+                                git branch: 'develop', url: 'git@github.com:Prathm0025/Slot-Vikings.git', depth: 1 
                             } catch (Exception e) {
                                 error "Checkout failed: ${e.message}"
                             }

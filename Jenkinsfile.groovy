@@ -11,7 +11,7 @@ pipeline {
     }
     
     environment {
-        PROJECT_PATH = "C:\\${PROJECT_NAME}" 
+        PROJECT_PATH = "D:\\${PROJECT_NAME}" 
         S3_BUCKET = "vikingsbucket" // Define your bucket name here
     }
 

@@ -53,8 +53,10 @@ pipeline {
                 script {
                     dir("${PROJECT_PATH}") {
                         bat '''
-                            git add Builds
+                            git stash 
+                            git add -f Builds
                             git commit -m "build updated"
+                            git pull origin develop
                             git push origin develop
                         '''
                     }

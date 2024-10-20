@@ -55,6 +55,7 @@ pipeline {
                             git checkout -b main || git checkout main
                             rmdir /S /Q Builds
                             git checkout develop -- Builds
+
                             git add -f Builds
                             git commit -m "Add build" || echo "No changes to commit"
                             git push

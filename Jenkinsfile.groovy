@@ -52,9 +52,9 @@ pipeline {
                         bat '''
                             git config user.email "prathamesh@underpinservices.com"
                             git config user.name "Prathm0025"
-                            git checkout main
+                            git checkout -b main || git checkout main
                             rmdir /S /Q Builds
-                            git checkout --develop Builds
+                            git checkout develop -- Builds
                             git add Builds
                             git commit -m "Add build" || echo "No changes to commit"
                             git push origin main

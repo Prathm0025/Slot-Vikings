@@ -1,20 +1,17 @@
 def PROJECT_NAME = "Slot-Vikings"
 def UNITY_VERSION = "2022.3.48f1"
 def UNITY_INSTALLATION = "C:\\Program Files\\Unity\\Hub\\Editor\\${UNITY_VERSION}\\Editor\\Unity.exe"
-def REPO_URL = "https://github.com/Prathm0025/Slot-Vikings.git"
+def REPO_URL = "git@github.com:Prathm0025/Slot-Vikings.git"
 
 pipeline {
-    agent {
-        label 'windows' // Specify the agent by label
-    }
+    agent any  
 
     options {
-        timeout(time: 60, unit: 'MINUTES') // Set a timeout for the entire build
+        timeout(time: 60, unit: 'MINUTES') 
     }
     
     environment {
         PROJECT_PATH = "C:\\${PROJECT_NAME}" 
-        Token = credentials('Github_Prathm0025') 
         S3_BUCKET = "vikingsbucket" // Define your bucket name here
     }
 
@@ -23,7 +20,7 @@ pipeline {
             steps {
                 script {
                     dir("${PROJECT_PATH}") { 
-                         git url: REPO_URL, branch: 'develop', credentialsId: 'Github_Prathm0025'
+                        git url: REPO_URL, branch: 'develop'
                     }
                 }
             }
@@ -46,14 +43,14 @@ pipeline {
                 script {
                     dir("${PROJECT_PATH}") {
                         bat '''
-                            git init
                             git config user.email "prathamesh@underpinservices.com"
                             git config user.name "Prathm0025"
+                            git checkout main
+                            del /F /Q Builds
+                            git checkout --develop Builds
                             git add Builds
-                            git commit -m "Add build"
-                            git branch main
-                            git remote set-url origin https://github.com/Prathm0025/Slot-Vikings.git
-                            git push https://${Token}@github.com/Prathm0025/Slot-Vikings.git main --force
+                            git commit -m "Add build" || echo "No changes to commit"
+                            git push origin main
                         '''
                     }
                 }

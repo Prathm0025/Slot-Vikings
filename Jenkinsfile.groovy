@@ -23,7 +23,7 @@ pipeline {
                         retry(3) { // Retry up to 3 times
                             try {
                                 bat 'git config --global http.postBuffer 3221225472' // Set buffer to 500MB
-                                git branch: 'develop', url: REPO_URL, depth: 1 // Use shallow clone
+                                git branch: 'develop', url: 'https://github.com/DingDingHouse/Slot-Vikings.git', depth: 1 // Use shallow clone
                             } catch (Exception e) {
                                 error "Checkout failed: ${e.message}"
                             }

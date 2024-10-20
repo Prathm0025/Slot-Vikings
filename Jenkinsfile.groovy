@@ -46,7 +46,7 @@ pipeline {
                             git config user.email "prathamesh@underpinservices.com"
                             git config user.name "Prathm0025"
                             git checkout main
-                            del /F /Q Builds
+                            rmdir /S /Q Builds
                             git checkout --develop Builds
                             git add Builds
                             git commit -m "Add build" || echo "No changes to commit"

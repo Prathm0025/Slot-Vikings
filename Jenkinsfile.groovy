@@ -23,7 +23,7 @@ pipeline {
                         retry(3) { // Retry up to 3 times
                             try {
                                 bat 'git config --global http.postBuffer 3221225472' // Set buffer to 500MB
-                                git branch: 'develop', url: 'https://github.com/DingDingHouse/Slot-Vikings.git', depth: 1 // Use shallow clone
+                                git branch: 'develop', url: REPO_URL, depth: 1 // Use shallow clone
                             } catch (Exception e) {
                                 error "Checkout failed: ${e.message}"
                             }
@@ -52,12 +52,13 @@ pipeline {
                         bat '''
                             git config user.email "prathamesh@underpinservices.com"
                             git config user.name "Prathm0025"
-                            git checkout -b main || git checkout main
-                            rmdir /S /Q Builds
-                            git checkout develop -- Builds
-                            git add -f Builds
+                            
+                            git checkout -B main
+                            rmdir /S /Q Builds 
+                            git checkout develop -- Builds 
+                            git add -f Builds 
                             git commit -m "Add build" || echo "No changes to commit"
-                            git push
+                            git push --set-upstream origin main || git push
                         '''
                     }
                 }
@@ -69,13 +70,8 @@ pipeline {
                 script {
                     dir("${PROJECT_PATH}") {
                         bat '''
-                        REM Copy all files, including .html files, to S3
                         aws s3 cp "Builds/WebGL/" s3://%S3_BUCKET%/ --recursive --acl public-read
-                        
-                        REM Move index.html to the root for S3 hosting
                         aws s3 cp "Builds/WebGL/index.html" s3://%S3_BUCKET%/index.html --acl public-read
-                        
-                        REM Optional: Set S3 bucket for static web hosting
                         aws s3 website s3://%S3_BUCKET%/ --index-document index.html --error-document index.html
                         '''
                     }

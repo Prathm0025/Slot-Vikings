@@ -19,10 +19,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    // Change to the D drive
-                    bat '''
-                    D:
-                    ''' 
 
                     // Check if the project path exists
                     if (fileExists(PROJECT_PATH)) {
@@ -32,6 +28,7 @@ pipeline {
                                 try {
                                     // Force pull latest changes and discard local changes
                                     bat '''
+                                    D:
                                     git checkout develop
                                     git fetch --all
                                     git reset --hard origin/develop

@@ -70,6 +70,7 @@ pipeline {
                         bat '''
                         hostname
                         git clean -fd
+                        git stash --include-untracked
                         git checkout main 
                         git rm -r -f Builds 
                         git add .

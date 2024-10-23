@@ -30,6 +30,7 @@ pipeline {
                                 try {
                                     // Force pull latest changes and discard local changes
                                     bat '''
+                                    git checkout develop
                                     git fetch --all
                                     git reset --hard origin/develop
                                     '''
@@ -40,10 +41,11 @@ pipeline {
                         }
                     } else {
                         // If the directory doesn't exist, clone the repository
-                        bat """
+                        bat '''
                         git config --global http.postBuffer 3221225472
                         git clone ${REPO_URL} D:\\Slot-Vikings
-                        """
+                        git checkout develop
+                        '''
                     }
                 }
             }
@@ -71,8 +73,9 @@ pipeline {
                         git add .
                         git commit -m "delete old Builds"
                         git push origin main
-                        git checkout develop
-                        git checkout -- Builds
+
+                        git checkout main
+                        git checkout develop -- Builds
                         git add Builds
                         git commit -m "adding new Builds"
                         git push origin main

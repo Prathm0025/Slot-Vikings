@@ -53,7 +53,7 @@ pipeline {
                 script {
                     withEnv(["UNITY_PATH=${UNITY_INSTALLATION}"]) {
                         bat '''
-                        "%UNITY_PATH%" -quit -batchmode -projectPath "%PROJECT_PATH%" -executeMethod BuildScript.BuildWebGL -logFile -
+                        "%UNITY_PATH%" -quit -batchmode -projectPath "D:\\Slot-Vikings" -executeMethod BuildScript.BuildWebGL -logFile -
                         '''
                     }
                 }

@@ -28,16 +28,11 @@ pipeline {
                         dir(PROJECT_PATH) {
                             retry(3) { // Retry up to 3 times
                                 try {
-                                    // Stash any local changes
-                                    bat 'git stash || echo "No changes to stash"'
-                                    
+                                    // Force pull latest changes and discard local changes
                                     bat '''
-                                    git config --global http.postBuffer 3221225472
-                                    git pull origin develop
+                                    git fetch --all
+                                    git reset --hard origin/develop
                                     '''
-                                    
-                                    // Apply the stashed changes
-                                    bat 'git stash pop || echo "No changes to apply"'
                                 } catch (Exception e) {
                                     error "Pulling changes failed: ${e.message}"
                                 }
@@ -71,10 +66,8 @@ pipeline {
                 script {
                     dir("${PROJECT_PATH}") {
                         bat '''
-                        git stash 
                         git add -f Builds
                         git commit -m "build updated" || echo "No changes to commit"
-                        git pull origin develop
                         git push origin develop
                         '''
                     }

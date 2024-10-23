@@ -68,6 +68,7 @@ pipeline {
                 script {
                     dir("${PROJECT_PATH}") {
                         bat '''
+                        hostname
                         git checkout main 
                         git rm -r -f Builds 
                         git add .

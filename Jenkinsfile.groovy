@@ -19,6 +19,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
+                    // Change to the D drive
+                    bat "D:"
 
                     // Check if the project path exists
                     if (fileExists(PROJECT_PATH)) {

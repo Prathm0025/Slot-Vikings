@@ -12,25 +12,37 @@ pipeline {
 
     environment {
         PROJECT_PATH = "D:\\Slot-Vikings"
-        S3_BUCKET = "vikingsbucket" 
+        S3_BUCKET = "vikingsbucket"
     }
 
     stages {
         stage('Checkout') {
             steps {
                 script {
-                    dir("${PROJECT_PATH}") {
-                        retry(3) { // Retry up to 3 times
-                            try {
-                                bat '''
-                                git config --global http.postBuffer 3221225472
-                                git clone git@github.com:Prathm0025/Slot-Vikings.git || git pull origin develop
-                                '''
-                                
-                            } catch (Exception e) {
-                                error "Checkout failed: ${e.message}"
+                    // Change to the D drive
+                    bat "D:"
+
+                    // Check if the project path exists
+                    if (fileExists(PROJECT_PATH)) {
+                        // If the directory exists, navigate into it
+                        dir(PROJECT_PATH) {
+                            retry(3) { // Retry up to 3 times
+                                try {
+                                    bat '''
+                                    git config --global http.postBuffer 3221225472
+                                    git pull origin develop
+                                    '''
+                                } catch (Exception e) {
+                                    error "Pulling changes failed: ${e.message}"
+                                }
                             }
                         }
+                    } else {
+                        // If the directory doesn't exist, clone the repository
+                        bat '''
+                        git config --global http.postBuffer 3221225472
+                        git clone git@github.com:Prathm0025/Slot-Vikings.git D:\\Slot-Vikings
+                        '''
                     }
                 }
             }
@@ -53,11 +65,11 @@ pipeline {
                 script {
                     dir("${PROJECT_PATH}") {
                         bat '''
-                            git stash 
-                            git add -f Builds
-                            git commit -m "build updated"
-                            git pull origin develop
-                            git push origin develop
+                        git stash 
+                        git add -f Builds
+                        git commit -m "build updated" || echo "No changes to commit"
+                        git pull origin develop
+                        git push origin develop
                         '''
                     }
                 }

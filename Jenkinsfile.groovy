@@ -28,7 +28,6 @@ pipeline {
                                 try {
                                     // Force pull latest changes and discard local changes
                                     bat '''
-                                    D:
                                     git checkout develop
                                     git fetch --all
                                     git reset --hard origin/develop

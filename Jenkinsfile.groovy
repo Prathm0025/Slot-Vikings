@@ -69,6 +69,7 @@ pipeline {
                     dir("${PROJECT_PATH}") {
                         bat '''
                         hostname
+                        git clean -fd
                         git checkout main 
                         git rm -r -f Builds 
                         git add .
@@ -77,7 +78,7 @@ pipeline {
 
                         git checkout main
                         git checkout develop -- Builds
-                        git add Builds
+                        git add -f Builds
                         git commit -m "adding new Builds"
                         git push origin main
                         '''

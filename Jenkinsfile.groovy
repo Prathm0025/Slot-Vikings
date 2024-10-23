@@ -7,7 +7,7 @@ pipeline {
     agent any
 
     options {
-        timeout(time: 60, unit: 'MINUTES')
+        timeout(time: 60, unit: 'MINUTES') // Adjust timeout as necessary
     }
 
     environment {
@@ -32,6 +32,7 @@ pipeline {
                                     bat '''
                                     git fetch --all
                                     git reset --hard origin/develop
+                                    git checkout develop
                                     '''
                                 } catch (Exception e) {
                                     error "Pulling changes failed: ${e.message}"
@@ -42,7 +43,9 @@ pipeline {
                         // If the directory doesn't exist, clone the repository
                         bat '''
                         git config --global http.postBuffer 3221225472
-                        git clone git@github.com:Prathm0025/Slot-Vikings.git D:\\Slot-Vikings
+                        git clone ${REPO_URL} D:\\Slot-Vikings
+                        cd D:\\Slot-Vikings
+                        git checkout develop
                         '''
                     }
                 }
@@ -66,9 +69,17 @@ pipeline {
                 script {
                     dir("${PROJECT_PATH}") {
                         bat '''
-                        git add -f Builds
-                        git commit -m "build updated" || echo "No changes to commit"
-                        git push origin develop
+                        git checkout main 
+                        git rm -r -f Builds 
+                        git add .
+                        git commit -m "delete old Builds" || echo "No changes to commit"
+                        git push origin main
+
+                        git checkout main 
+                        git checkout develop -- Builds
+                        git add Builds
+                        git commit -m "adding new Builds"
+                        git push origin main
                         '''
                     }
                 }

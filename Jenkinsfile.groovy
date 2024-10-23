@@ -28,10 +28,16 @@ pipeline {
                         dir(PROJECT_PATH) {
                             retry(3) { // Retry up to 3 times
                                 try {
+                                    // Stash any local changes
+                                    bat 'git stash || echo "No changes to stash"'
+                                    
                                     bat '''
                                     git config --global http.postBuffer 3221225472
                                     git pull origin develop
                                     '''
+                                    
+                                    // Apply the stashed changes
+                                    bat 'git stash pop || echo "No changes to apply"'
                                 } catch (Exception e) {
                                     error "Pulling changes failed: ${e.message}"
                                 }
@@ -53,7 +59,7 @@ pipeline {
                 script {
                     withEnv(["UNITY_PATH=${UNITY_INSTALLATION}"]) {
                         bat '''
-                        "%UNITY_PATH%" -quit -batchmode -projectPath "D:\\Slot-Vikings" -executeMethod BuildScript.BuildWebGL -logFile -
+                        "%UNITY_PATH%" -quit -batchmode -projectPath "%PROJECT_PATH%" -executeMethod BuildScript.BuildWebGL -logFile -
                         '''
                     }
                 }

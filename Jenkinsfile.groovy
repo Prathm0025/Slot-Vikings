@@ -11,7 +11,7 @@ pipeline {
     }
 
     environment {
-        PROJECT_PATH = "D:\\${PROJECT_NAME}"
+        PROJECT_PATH = "D:\\Slot-Vikings"
         S3_BUCKET = "vikingsbucket" 
     }
 

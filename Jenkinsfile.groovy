@@ -20,7 +20,10 @@ pipeline {
             steps {
                 script {
                     // Change to the D drive
-                    bat "D:"
+                    bat '''
+                    whoami
+                    D:
+                    '''
 
                     // Check if the project path exists
                     if (fileExists(PROJECT_PATH)) {

@@ -19,39 +19,23 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    // Change to the D drive
                     bat 'whoami'
                     bat 'cd /d D:\\'
 
-                    // Check if the project path exists
-                    if (fileExists(PROJECT_PATH)) {
-                        // If the directory exists, navigate into it
+                    
                         dir(PROJECT_PATH) {
-                            retry(3) { // Retry up to 3 times
-                                try {
-                                    // Force pull latest changes and discard local changes
                                     bat '''
+                                    git config --global http.postBuffer 3221225472
+                                    git clone git@github.com:Prathm0025/Slot-Vikings.git D:\\Slot-Vikings
                                     git checkout develop
                                     git fetch --all
                                     git reset --hard origin/develop
                                     '''
-                                } catch (Exception e) {
-                                    error "Pulling changes failed: ${e.message}"
-                                }
-                            }
-                        }
-                    } else {
-                        // If the directory doesn't exist, clone the repository
-                        bat '''
-                        git config --global http.postBuffer 3221225472
-                        git clone git@github.com:Prathm0025/Slot-Vikings.git D:\\Slot-Vikings
-                        cd Slot-Vikings
-                        git checkout develop
-                        '''
-                    }
+        
                 }
             }
         }
+    }
 
         stage('Build WebGL') {
             steps {

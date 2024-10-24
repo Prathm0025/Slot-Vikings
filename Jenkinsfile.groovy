@@ -13,6 +13,7 @@ pipeline {
     environment {
         PROJECT_PATH = "D:\\Slot-Vikings"
         S3_BUCKET = "vikingsbucket"
+        REPO_URL = "git@github.com:Prathm0025/Slot-Vikings.git"
     }
 
     stages {
@@ -44,7 +45,7 @@ pipeline {
                         // If the directory doesn't exist, clone the repository
                         bat '''
                         git config --global http.postBuffer 3221225472
-                        git clone git@github.com:Prathm0025/Slot-Vikings.git D:\\Slot-Vikings
+                        git clone ${REPO_URL} D:\\Slot-Vikings
                         cd Slot-Vikings
                         git checkout develop
                         '''
@@ -95,13 +96,13 @@ pipeline {
                 script {
                     dir("${PROJECT_PATH}") {
                         bat '''
-                        REM Copy all files, including .html files, to S3
+                        
                         aws s3 cp "Builds/WebGL/" s3://%S3_BUCKET%/ --recursive --acl public-read
 
-                        REM Move index.html to the root for S3 hosting
+                        
                         aws s3 cp "Builds/WebGL/index.html" s3://%S3_BUCKET%/index.html --acl public-read
 
-                        REM Optional: Set S3 bucket for static web hosting
+                        
                         aws s3 website s3://%S3_BUCKET%/ --index-document index.html --error-document index.html
                         '''
                     }

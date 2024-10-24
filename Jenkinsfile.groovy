@@ -22,8 +22,7 @@ pipeline {
                     // Change to the D drive
                     bat '''
                     whoami
-                    cd /d D:
-                    '''
+                    cd /d D:'''
 
                     // Check if the project path exists
                     if (fileExists(PROJECT_PATH)) {

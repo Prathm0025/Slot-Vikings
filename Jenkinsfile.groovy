@@ -22,13 +22,11 @@ pipeline {
                     bat '''
                     cd /d D:\\
                     git config --global http.postBuffer 3221225472
-                    git clone ${REPO_URL} Slot-Vikings || (
-                        echo "Repository already exists, pulling latest changes."
-                        cd Slot-Vikings
-                        git fetch --all
-                        git reset --hard origin/develop
-                        git checkout develop
-                    )
+                    git clone ${REPO_URL} Slot-Vikings || echo "Repository already exists, pulling latest changes."
+                    cd Slot-Vikings
+                    git fetch --all
+                    git reset --hard origin/develop
+                    git checkout develop
                     '''
                 }
             }

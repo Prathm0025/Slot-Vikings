@@ -19,24 +19,20 @@ pipeline {
         stage('Checkout') {
             steps {
                 script {
-                    bat 'whoami'
-                    bat 'cd /d D:\\'
-
-                    
-                        dir(PROJECT_PATH) {
-                                    bat '''
-                                    git config --global http.postBuffer 3221225472
-                                    git clone git@github.com:Prathm0025/Slot-Vikings.git D:\\Slot-Vikings
-                                    git checkout develop
-                                    git fetch --all
-                                    git reset --hard origin/develop
-                                    '''
-        
+                    bat '''
+                    cd /d D:\\
+                    git config --global http.postBuffer 3221225472
+                    git clone ${REPO_URL} Slot-Vikings || (
+                        echo "Repository already exists, pulling latest changes."
+                        cd Slot-Vikings
+                        git fetch --all
+                        git reset --hard origin/develop
+                        git checkout develop
+                    )
+                    '''
                 }
             }
         }
-    }
-
         stage('Build WebGL') {
             steps {
                 script {

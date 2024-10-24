@@ -52,6 +52,7 @@ pipeline {
                         git clean -fd
                         git stash --include-untracked
                         git checkout main 
+                        git pull origin main
                         git rm -r -f Builds 
                         git add .
                         git commit -m "delete old Builds"

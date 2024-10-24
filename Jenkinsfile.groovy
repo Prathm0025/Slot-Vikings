@@ -20,9 +20,8 @@ pipeline {
             steps {
                 script {
                     // Change to the D drive
-                    bat '''
-                    whoami
-                    cd /d D:\\'''
+                    bat 'whoami'
+                    bat 'cd /d D:\\'
 
                     // Check if the project path exists
                     if (fileExists(PROJECT_PATH)) {
@@ -46,6 +45,7 @@ pipeline {
                         bat '''
                         git config --global http.postBuffer 3221225472
                         git clone git@github.com:Prathm0025/Slot-Vikings.git D:\\Slot-Vikings
+                        cd Slot-Vikings
                         git checkout develop
                         '''
                     }

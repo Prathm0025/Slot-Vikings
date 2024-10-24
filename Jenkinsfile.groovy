@@ -45,7 +45,7 @@ pipeline {
                         // If the directory doesn't exist, clone the repository
                         bat '''
                         git config --global http.postBuffer 3221225472
-                        git clone ${REPO_URL} D:\\Slot-Vikings
+                        git clone git@github.com:Prathm0025/Slot-Vikings.git D:\\Slot-Vikings
                         git checkout develop
                         '''
                     }

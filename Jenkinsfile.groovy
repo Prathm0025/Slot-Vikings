@@ -22,7 +22,7 @@ pipeline {
                 script {
                     
                     bat 'whoami'
-                    bat 'cd /d D:\\'
+                    bat 'D:'
 
                     if (fileExists(PROJECT_PATH + '\\.git')) {
                         dir(PROJECT_PATH) {

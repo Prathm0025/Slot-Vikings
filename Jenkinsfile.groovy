@@ -63,6 +63,7 @@ pipeline {
                         git checkout develop -- Builds
                         git add -f Builds
                         git commit -m "adding new Builds"
+                        git pull
                         git push origin main
                         '''
                     }

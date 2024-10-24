@@ -75,12 +75,24 @@ pipeline {
                 script {
                     dir("${PROJECT_PATH}") {
                         bat '''
-                        REM Copy all files, including .html files, to S3
-                        aws s3 cp "Builds/WebGL/" s3://%S3_BUCKET%/ --recursive --acl public-read
-
+                        REM Copy all .html files to S3 with the correct content type
+                        aws s3 cp "Builds/WebGL/" s3://%S3_BUCKET%/ --recursive --acl public-read --exclude "*" --include "*.html" --content-type "text/html"
+                        
+                        REM Copy .data files to S3 with the correct content type
+                        aws s3 cp "Builds/WebGL/" s3://%S3_BUCKET%/ --recursive --acl public-read --exclude "*" --include "*.data" --content-type "application/octet-stream"
+                        
+                        REM Copy .framework.js files to S3 with the correct content type
+                        aws s3 cp "Builds/WebGL/" s3://%S3_BUCKET%/ --recursive --acl public-read --exclude "*" --include "*.framework.js" --content-type "application/javascript"
+                        
+                        REM Copy .loader.js files to S3 with the correct content type
+                        aws s3 cp "Builds/WebGL/" s3://%S3_BUCKET%/ --recursive --acl public-read --exclude "*" --include "*.loader.js" --content-type "application/javascript"
+                        
+                        REM Copy .wasm files to S3 with the correct content type
+                        aws s3 cp "Builds/WebGL/" s3://%S3_BUCKET%/ --recursive --acl public-read --exclude "*" --include "*.wasm" --content-type "application/octet-stream"
+                        
                         REM Move index.html to the root for S3 hosting
-                        aws s3 cp "Builds/WebGL/index.html" s3://%S3_BUCKET%/index.html --acl public-read
-
+                        aws s3 cp "Builds/WebGL/index.html" s3://%S3_BUCKET%/index.html --acl public-read --content-type "text/html"
+                        
                         REM Optional: Set S3 bucket for static web hosting
                         aws s3 website s3://%S3_BUCKET%/ --index-document index.html --error-document index.html
                         '''

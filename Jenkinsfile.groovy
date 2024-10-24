@@ -13,30 +13,39 @@ pipeline {
     environment {
         PROJECT_PATH = "D:\\Slot-Vikings"
         S3_BUCKET = "vikingsbucket"
-        REPO_URL = "git@github.com:Prathm0025/Slot-Vikings.git"
     }
 
     stages {
         stage('Checkout') {
             steps {
                 script {
-                    
+                    // Change to the D drive
                     bat 'whoami'
-                    bat 'D:'
+                    bat 'cd /d D:\\'
 
-                    if (fileExists(PROJECT_PATH + '\\.git')) {
+                    // Check if the project path exists
+                    if (fileExists(PROJECT_PATH)) {
+                        // If the directory exists, navigate into it
                         dir(PROJECT_PATH) {
-                            bat '''
-                            git fetch --all
-                            git reset --hard origin/develop
-                            git checkout develop
-                            '''
+                            retry(3) { // Retry up to 3 times
+                                try {
+                                    // Force pull latest changes and discard local changes
+                                    bat '''
+                                    git checkout develop
+                                    git fetch --all
+                                    git reset --hard origin/develop
+                                    '''
+                                } catch (Exception e) {
+                                    error "Pulling changes failed: ${e.message}"
+                                }
+                            }
                         }
                     } else {
+                        // If the directory doesn't exist, clone the repository
                         bat '''
                         git config --global http.postBuffer 3221225472
-                        git clone ${REPO_URL} D:\\Slot-Vikings
-                        cd D:\\Slot-Vikings
+                        git clone git@github.com:Prathm0025/Slot-Vikings.git D:\\Slot-Vikings
+                        cd Slot-Vikings
                         git checkout develop
                         '''
                     }
@@ -86,13 +95,13 @@ pipeline {
                 script {
                     dir("${PROJECT_PATH}") {
                         bat '''
-                        
+                        REM Copy all files, including .html files, to S3
                         aws s3 cp "Builds/WebGL/" s3://%S3_BUCKET%/ --recursive --acl public-read
 
-                        
+                        REM Move index.html to the root for S3 hosting
                         aws s3 cp "Builds/WebGL/index.html" s3://%S3_BUCKET%/index.html --acl public-read
 
-                        
+                        REM Optional: Set S3 bucket for static web hosting
                         aws s3 website s3://%S3_BUCKET%/ --index-document index.html --error-document index.html
                         '''
                     }
